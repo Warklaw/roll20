@@ -1,0 +1,79 @@
+/**
+ * This script rolls a d100 and computes and outputs the success results based
+ * on Dark Heresy Second Edition RPG criteria.
+ * 
+ * The following commands is used:
+ * !roll40k [tokenName], [attributeValue], [ModifierValue]  
+**/
+
+//Rolls a d100 and calculates the success or fail results to the chat window.
+
+var rollResult = function(token, attribute, modifier) {
+    var roll = randomInteger(100);
+    var modTarget = parseInt(attribute) + parseInt(modifier);
+    var output1 = token + ' has a modified target of <B>' + modTarget + '</B> and rolled a <B>' + roll + '</B>. ';
+    var output2 = '';
+    var output3 = '';
+    var autoRoll;
+    var degOfSuc;
+
+    //Check for an automatic result 
+    switch (roll) {
+    case 1:
+        autoRoll = 1;
+        break;
+    case 100:
+        autoRoll = 100;
+        break;
+    default:
+        autoRoll = 0;
+    }
+    
+    //Form output message based on result
+    if(roll <= modTarget) {
+        if(autoRoll === 100){
+            output2 = '<span style="color:red">' + token + ' rolled a 100 and automatically fails by <B>1 degree</B>.</span> ';
+        }
+        degOfSuc = (Math.floor(modTarget/10) - Math.floor(roll/10)) + 1;
+        output2 = '<span style="color:green">' + token + ' succeeds by <B>' + degOfSuc + ' degree(s)</B>.</span> ';
+    }
+    else {
+        if(autoRoll === 1) {
+            output2 = '<span style="color:green">' + token + ' rolled a 1 and automatically succeeds by <B>1 degree</B>.</span> ';
+        }
+        degOfSuc = (Math.floor(roll/10) - Math.floor(modTarget/10)) + 1;
+        output2 = '<span style="color:red">' + token + ' fails by <B>' + degOfSuc + ' degree(s)</B></span>. ';
+    }
+    
+    //Return output
+    var output = output1 + '<br><br>' + output2 + output3;
+    return output;
+ }
+
+/** Interpret the chat commands. **/
+on('chat:message', function(msg) {
+    var cmdName;
+    var msgTxt;
+
+    cmdName = '!roll40k ';
+    msgTxt = msg.content;
+    if(msg.type == 'api' && msgTxt.indexOf(cmdName) !== -1) {
+        var paramList = msgTxt.slice(cmdName.length);
+        if(paramList.indexOf(',') == -1) {
+            sendChat(msg.who, '/w ' + msg.who + ' must specify three comma-separated parameters for !roll40k command.');
+        }
+        else {
+            var paramArray = paramList.split(',');
+            var curToken = trimString(paramArray[0]);
+            var attribute = trimString(paramArray[1]);
+            var modifier = trimString(paramArray[2]);
+            var result = rollResult(curToken, attribute, modifier);
+            sendChat(msg.who, result);
+            }
+    }
+});
+    
+/** Trims a string **/
+var trimString = function(src) {
+    return src.replace(/^\s+|\s+$/g, '');
+}
