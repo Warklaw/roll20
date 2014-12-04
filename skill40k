@@ -13,11 +13,29 @@ var rollResult = function(token, attribute, skillBn1, skillBn2, skillBn3, skillB
     var roll = randomInteger(100);
     var skillBonus = parseInt(skillBn1) + parseInt(skillBn2) + parseInt(skillBn3) + parseInt(skillBn4) - 20;
     var modTarget = parseInt(attribute) + skillBonus + parseInt(modifier);
-    var output1 = token + ' has a modified target of <B>' + modTarget + '</B> and rolled a <B>' + roll + '</B>. ';
+    var output1 = '';
     var output2 = '';
     var output3 = '';
     var autoRoll;
     var degOfSuc;
+    
+    //Create output which includes skill level wording 
+    switch (skillBonus) {
+    case 0:
+        output1 = token + ' knows a bit of this skill (0) granting a modified target of <B>' + modTarget + '</B>. They rolled a <B>' + roll + '</B>. ';
+        break;
+    case 10:
+        output1 = token + ' is trained in this skill (+10) granting a modified target of <B>' + modTarget + '</B>. They rolled a <B>' + roll + '</B>. ';
+        break;
+    case 20:
+        output1 = token + ' is experianced with this skill (+20) granting a modified target of <B>' + modTarget + '</B>. They rolled a <B>' + roll + '</B>. ';
+        break;
+    case 30:
+        output1 = token + ' is a veteran of this skill (+30) granting a modified target of <B>' + modTarget + '</B>. They rolled a <B>' + roll + '</B>. ';
+        break;
+    default:
+        output1 = token + ' is untrained in this skill (-20) granting a modified target of <B>' + modTarget + '</B>. They rolled a <B>' + roll + '</B>. ';
+    }
 
     //Check for an automatic result 
     switch (roll) {
