@@ -4,7 +4,17 @@
  * checks.
  * 
  * The following commands is used:
- * !skill40k [tokenName], [attributeValue], [skillBonus1], [skillBonus2], [skillBonus3], [ModifierValue]  
+ * !skill40k [tokenName], [attributeValue], [skillBonus1], [skillBonus2], [skillBonus3], [skillBonus4], [ModifierValue]
+ * 
+ * It is expected that the following bonus are inlcuded based on the skill level of the character:
+ * skillBonus1 = 20 or 0, if known or untrained
+ * skillBonus2 = 10 or 0, if trained or less than trained
+ * skillBonus3 = 10 or 0, if experianced or less than experianced
+ * skillBonus4 = 10 or 0, if veteran or less than veteran
+ * 
+ * Example: 
+ * /em @{character_name} makes a known Acrobatics skill check!
+ * !skill40k @{character_name},@{Agility},20,0,0,0,?{Total Modifiers|0}
 **/
 
 //Rolls a d100 and calculates the success or fail results to the chat window.
